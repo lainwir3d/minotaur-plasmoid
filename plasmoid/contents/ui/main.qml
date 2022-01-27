@@ -8,7 +8,7 @@ Item {
     id: root
 
     Plasmoid.compactRepresentation: CompactRepresentation {}
-    Plasmoid.fullRepresentation: FullRepresentation {}
+    Plasmoid.fullRepresentation: FullChartsRepresentation {}
 
     readonly property bool isConstrained: (plasmoid.formFactor == PlasmaCore.Types.Vertical || plasmoid.formFactor == PlasmaCore.Types.Horizontal)
 

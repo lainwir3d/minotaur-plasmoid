@@ -70,6 +70,7 @@ Item {
                 error: function(error) {
                     console.log('Retrieval returned error:', error)
                     market_value.update_failed = true
+                    market_value.requestFail();
                 }
             });
         }
@@ -139,6 +140,8 @@ Item {
 
                     market.display_base = market_name[0]
                     market.display_target = market_name[1]
+
+                    market_value.requestOk();
                 }
             },
             "Binance": {
@@ -170,6 +173,8 @@ Item {
 
                     market.display_base = market.base
                     market.display_target = market.target
+
+                    market_value.requestOk();
                 }
             }
         }
@@ -193,6 +198,7 @@ Item {
         property double day_change: 0
         property string last_update: ""
         property bool update_failed: false
-
+        signal requestOk
+        signal requestFail
     }
 }
