@@ -68,6 +68,50 @@ Item {
 
                 property string default_color: ""
             }
+
+            Item { Layout.fillWidth: true }
+
+            PlasmaComponents.SpinBox {
+                id: rangeSB
+
+                from: 0
+                to: items.length - 1
+                value: 0 // Full
+
+                editable: false
+
+                onValueChanged: {
+                    xAxis.determineMinMax();
+                }
+
+                property var items: [
+                    { text: "Full", hours: -1, days: -1, weeks: -1, months: -1},
+                    { text: "1 hour", hours: 1, days: 0, weeks: 0, months: 0},
+                    { text: "1 day", hours: 0, days: 1, weeks: 0, months: 0},
+                    { text: "3 days", hours: 0, days: 3, weeks: 0, months: 0},
+                    { text: "1 week", hours: 0, days: 0, weeks: 1, months: 0},
+                    { text: "2 weeks", hours: 0, days: 0, weeks: 2, months: 0},
+                    { text: "1 month", hours: 0, days: 0, weeks: 0, months: 1},
+                    { text: "2 months", hours: 0, days: 0, weeks: 0, months: 2}
+                ]
+
+                validator: RegExpValidator {
+                    regExp: new RegExp("^[1-9]+ (hour|day|week|month)[s]?$", "i")
+                }
+
+                textFromValue: function(value) {
+                    return items[value].text;
+                }
+
+                valueFromText: function(text) {
+                    for (var i = 0; i < items.length; ++i) {
+                        if (items[i].text.toLowerCase().indexOf(text.toLowerCase()) === 0)
+                            return i
+                    }
+                    return sb.value
+                }
+
+            }
         }
 
         ChartView {
@@ -125,11 +169,24 @@ Item {
                 labelsFont: PlasmaCore.Theme.defaultFont
 
                 function determineMinMax(){
-                    var d = new Date();
-                    var h = d.getHours();
-
                     var newMin = chartView.firstDate;
-                    var newMax = new Date(); newMax.setSeconds(newMax.getSeconds() + plasmoid.configuration.interval);
+                    if(rangeSB.value > 0){
+                        var r = rangeSB.items[rangeSB.value];
+
+                        print("h:" +r.hours + " d:" + r.days + " w:" + r.weeks + " m:" + r.months);
+
+                        newMin = new Date();
+                        newMin.setHours(newMin.getHours() + r.hours * -1);
+                        newMin.setHours(newMin.getHours() + r.days * -24);
+                        newMin.setHours(newMin.getHours() + r.weeks * 7 * -24);
+                        newMin.setMonth(newMin.getMonth() + r.months * -1);
+                    }
+
+                    var newMax = new Date();
+                    if(priceSeries.count > 0){
+                        newMax.setDate(priceSeries.at(priceSeries.count - 1)); // get last value in series
+                    }
+                    newMax.setSeconds(newMax.getSeconds() + plasmoid.configuration.interval);
 
                     if(newMax != max){
                         max = newMax;
