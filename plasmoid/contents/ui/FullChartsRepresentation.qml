@@ -87,6 +87,7 @@ Item {
                 property var items: [
                     { text: "Full", hours: -1, days: -1, weeks: -1, months: -1},
                     { text: "1 hour", hours: 1, days: 0, weeks: 0, months: 0},
+                    { text: "12 hours", hours: 12, days: 0, weeks: 0, months: 0},
                     { text: "1 day", hours: 0, days: 1, weeks: 0, months: 0},
                     { text: "3 days", hours: 0, days: 3, weeks: 0, months: 0},
                     { text: "1 week", hours: 0, days: 0, weeks: 1, months: 0},
@@ -123,8 +124,16 @@ Item {
             opacity: 0.5
 
             animationOptions: ChartView.SeriesAnimations
+
             legend.visible: false
             antialiasing: true
+
+            margins {
+                top: 5
+                right: 5
+                bottom: 5
+                left: 5
+            }
 
             property date firstDate: new Date()
 
@@ -166,7 +175,11 @@ Item {
                 tickCount: 0
 
                 labelsColor: PlasmaCore.Theme.textColor
-                labelsFont: PlasmaCore.Theme.defaultFont
+                labelsFont {
+                    family: PlasmaCore.Theme.defaultFont.family
+                    pointSize: base.font.pointSize * 0.66
+                }
+                labelsAngle: -45
 
                 function determineMinMax(){
                     var newMin = chartView.firstDate;
@@ -205,7 +218,11 @@ Item {
                 max: market_value.high
 
                 labelsColor: PlasmaCore.Theme.textColor
-                labelsFont: PlasmaCore.Theme.defaultFont
+
+                labelsFont {
+                    family: PlasmaCore.Theme.defaultFont.family
+                    pointSize: base.font.pointSize * 0.66
+                }
             }
 
             SplineSeries {
