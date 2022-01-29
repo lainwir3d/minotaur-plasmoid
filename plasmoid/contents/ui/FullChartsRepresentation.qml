@@ -103,11 +103,13 @@ Item {
                         chartView.firstDate = new Date();
                     }
 
-                    priceSeries.append(new Date().getTime(), market_value.last);
+                    var currentDate = new Date().getTime();
+                    var lastDate = priceSeries.at(priceSeries.count - 1).x;
 
-                    xAxis.determineMinMax();
-
-                    print("hiah");
+                    if(currentDate > lastDate){
+                        priceSeries.append(currentDate, market_value.last);
+                        xAxis.determineMinMax();
+                    }
                 }
             }
 
@@ -126,12 +128,8 @@ Item {
                     var d = new Date();
                     var h = d.getHours();
 
-                    //var newMax = new Date(); newMax.setHours(newMax.getHours() + 1); newMax.setMinutes(0);
-                    //var newMin = new Date(); newMin.setDate(newMin.getDate()-1); newMin.setHours(newMin.getHours() - 24); newMin.setMinutes(0);
-
-                    var newMin = chartView.firstDate;// newMin.setMinutes(newMin.getMinutes() - 1);
+                    var newMin = chartView.firstDate;
                     var newMax = new Date(); newMax.setSeconds(newMax.getSeconds() + plasmoid.configuration.interval);
-
 
                     if(newMax != max){
                         max = newMax;
