@@ -193,6 +193,25 @@ Item {
                         newMin.setHours(newMin.getHours() + r.days * -24);
                         newMin.setHours(newMin.getHours() + r.weeks * 7 * -24);
                         newMin.setMonth(newMin.getMonth() + r.months * -1);
+
+                        if(r.months > 0){
+                            format = "MMM yyyy";
+                            tickCount = Math.max(3, r.months + 1);
+                        }else if(r.weeks > 0){
+                            format = "dd MMM";
+                            tickCount = Math.max(3, r.weeks + 1);
+                        }
+                        else if(r.days > 0){
+                            format = "dd MMM";
+                            tickCount = Math.max(3, r.days + 1);
+                        }
+                        else{
+                            format = "hh:mm:ss";
+                            tickCount = Math.max(3, r.hours + 1);
+                        }
+                    }else {
+                        format = "hh:mm:ss";
+                        tickCount = 5; // TODO
                     }
 
                     var newMax = new Date();
