@@ -152,16 +152,24 @@ Item {
             Connections{
                 target: market_value
                 onRequestOk: {
-                    if(priceSeries.count == 0){
-                        chartView.firstDate = new Date();
+                    var now = new Date();
+                    if(now.getTime() < 100000){
+                        print("weird date. ignoring");
+                        return; // first call returns weird date (really low, <100)
                     }
 
-                    var currentDate = new Date().getTime();
-                    var lastDate = priceSeries.at(priceSeries.count - 1).x;
-
-                    if(currentDate > lastDate){
-                        priceSeries.append(currentDate, market_value.last);
+                    if(priceSeries.count == 0){
+                        priceSeries.append(now.getTime(), market_value.last);
                         xAxis.determineMinMax();
+                        return;
+                    }
+
+                    var lastDate = priceSeries.at(priceSeries.count - 1).x;
+                    if(now > lastDate){
+                        priceSeries.append(now, market_value.last);
+                        xAxis.determineMinMax();
+                    }else{
+                        print("new point date error!");
                     }
                 }
             }
@@ -182,11 +190,11 @@ Item {
                 labelsAngle: -45
 
                 function determineMinMax(){
-                    var newMin = chartView.firstDate;
+                    var newMin = new Date();
+                    if(priceSeries.count > 0) newMin = new Date(priceSeries.at(0).x);
+
                     if(rangeSB.value > 0){
                         var r = rangeSB.items[rangeSB.value];
-
-                        print("h:" +r.hours + " d:" + r.days + " w:" + r.weeks + " m:" + r.months);
 
                         newMin = new Date();
                         newMin.setHours(newMin.getHours() + r.hours * -1);
@@ -216,7 +224,7 @@ Item {
 
                     var newMax = new Date();
                     if(priceSeries.count > 0){
-                        newMax.setDate(priceSeries.at(priceSeries.count - 1)); // get last value in series
+                        newMax = new Date(priceSeries.at(priceSeries.count - 1).x); // get last value in series
                     }
                     newMax.setSeconds(newMax.getSeconds() + plasmoid.configuration.interval);
 
@@ -226,9 +234,6 @@ Item {
                     }
                 }
 
-                Component.onCompleted: {
-                    determineMinMax();
-                }
             }
 
             ValueAxis {
