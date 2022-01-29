@@ -1,5 +1,5 @@
 import QtQuick 2.15
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.components 3.0 as PlasmaComponents
 import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 
@@ -37,7 +37,7 @@ Item {
             rightMargin: 5
         }
 
-        Row {
+        RowLayout {
             spacing: 3
 
             PlasmaComponents.Label {
@@ -68,6 +68,51 @@ Item {
 
                 property string default_color: ""
             }
+
+            Item { Layout.fillWidth: true }
+
+            PlasmaComponents.SpinBox {
+                id: rangeSB
+
+                from: 0
+                to: items.length - 1
+                value: 0 // Full
+
+                editable: false
+
+                onValueChanged: {
+                    xAxis.determineMinMax();
+                }
+
+                property var items: [
+                    { text: "Full", hours: -1, days: -1, weeks: -1, months: -1},
+                    { text: "1 hour", hours: 1, days: 0, weeks: 0, months: 0},
+                    { text: "12 hours", hours: 12, days: 0, weeks: 0, months: 0},
+                    { text: "1 day", hours: 0, days: 1, weeks: 0, months: 0},
+                    { text: "3 days", hours: 0, days: 3, weeks: 0, months: 0},
+                    { text: "1 week", hours: 0, days: 0, weeks: 1, months: 0},
+                    { text: "2 weeks", hours: 0, days: 0, weeks: 2, months: 0},
+                    { text: "1 month", hours: 0, days: 0, weeks: 0, months: 1},
+                    { text: "2 months", hours: 0, days: 0, weeks: 0, months: 2}
+                ]
+
+                validator: RegExpValidator {
+                    regExp: new RegExp("^[1-9]+ (hour|day|week|month)[s]?$", "i")
+                }
+
+                textFromValue: function(value) {
+                    return items[value].text;
+                }
+
+                valueFromText: function(text) {
+                    for (var i = 0; i < items.length; ++i) {
+                        if (items[i].text.toLowerCase().indexOf(text.toLowerCase()) === 0)
+                            return i
+                    }
+                    return sb.value
+                }
+
+            }
         }
 
         ChartView {
@@ -79,8 +124,16 @@ Item {
             opacity: 0.5
 
             animationOptions: ChartView.SeriesAnimations
+
             legend.visible: false
             antialiasing: true
+
+            margins {
+                top: 5
+                right: 5
+                bottom: 5
+                left: 5
+            }
 
             property date firstDate: new Date()
 
@@ -99,15 +152,25 @@ Item {
             Connections{
                 target: market_value
                 onRequestOk: {
-                    if(priceSeries.count == 0){
-                        chartView.firstDate = new Date();
+                    var now = new Date();
+                    if(now.getTime() < 100000){
+                        print("weird date. ignoring");
+                        return; // first call returns weird date (really low, <100)
                     }
 
-                    priceSeries.append(new Date().getTime(), market_value.last);
+                    if(priceSeries.count == 0){
+                        priceSeries.append(now.getTime(), market_value.last);
+                        xAxis.determineMinMax();
+                        return;
+                    }
 
-                    xAxis.determineMinMax();
-
-                    print("hiah");
+                    var lastDate = priceSeries.at(priceSeries.count - 1).x;
+                    if(now > lastDate){
+                        priceSeries.append(now, market_value.last);
+                        xAxis.determineMinMax();
+                    }else{
+                        print("new point date error!");
+                    }
                 }
             }
 
@@ -120,18 +183,50 @@ Item {
                 tickCount: 0
 
                 labelsColor: PlasmaCore.Theme.textColor
-                labelsFont: PlasmaCore.Theme.defaultFont
+                labelsFont {
+                    family: PlasmaCore.Theme.defaultFont.family
+                    pointSize: base.font.pointSize * 0.66
+                }
+                labelsAngle: -45
 
                 function determineMinMax(){
-                    var d = new Date();
-                    var h = d.getHours();
+                    var newMin = new Date();
+                    if(priceSeries.count > 0) newMin = new Date(priceSeries.at(0).x);
 
-                    //var newMax = new Date(); newMax.setHours(newMax.getHours() + 1); newMax.setMinutes(0);
-                    //var newMin = new Date(); newMin.setDate(newMin.getDate()-1); newMin.setHours(newMin.getHours() - 24); newMin.setMinutes(0);
+                    if(rangeSB.value > 0){
+                        var r = rangeSB.items[rangeSB.value];
 
-                    var newMin = chartView.firstDate;// newMin.setMinutes(newMin.getMinutes() - 1);
-                    var newMax = new Date(); newMax.setSeconds(newMax.getSeconds() + plasmoid.configuration.interval);
+                        newMin = new Date();
+                        newMin.setHours(newMin.getHours() + r.hours * -1);
+                        newMin.setHours(newMin.getHours() + r.days * -24);
+                        newMin.setHours(newMin.getHours() + r.weeks * 7 * -24);
+                        newMin.setMonth(newMin.getMonth() + r.months * -1);
 
+                        if(r.months > 0){
+                            format = "MMM yyyy";
+                            tickCount = Math.max(3, r.months + 1);
+                        }else if(r.weeks > 0){
+                            format = "dd MMM";
+                            tickCount = Math.max(3, r.weeks + 1);
+                        }
+                        else if(r.days > 0){
+                            format = "dd MMM";
+                            tickCount = Math.max(3, r.days + 1);
+                        }
+                        else{
+                            format = "hh:mm:ss";
+                            tickCount = Math.max(3, r.hours + 1);
+                        }
+                    }else {
+                        format = "hh:mm:ss";
+                        tickCount = 5; // TODO
+                    }
+
+                    var newMax = new Date();
+                    if(priceSeries.count > 0){
+                        newMax = new Date(priceSeries.at(priceSeries.count - 1).x); // get last value in series
+                    }
+                    newMax.setSeconds(newMax.getSeconds() + plasmoid.configuration.interval);
 
                     if(newMax != max){
                         max = newMax;
@@ -139,9 +234,6 @@ Item {
                     }
                 }
 
-                Component.onCompleted: {
-                    determineMinMax();
-                }
             }
 
             ValueAxis {
@@ -150,7 +242,11 @@ Item {
                 max: market_value.high
 
                 labelsColor: PlasmaCore.Theme.textColor
-                labelsFont: PlasmaCore.Theme.defaultFont
+
+                labelsFont {
+                    family: PlasmaCore.Theme.defaultFont.family
+                    pointSize: base.font.pointSize * 0.66
+                }
             }
 
             SplineSeries {
@@ -190,15 +286,13 @@ Item {
             PlasmaComponents.Label {
                 id: value
 
-                width: paintedWidth
-
                 text: market_value.last
                 .toFixed(
                 Math.max(9 - market_value.last.toFixed(0).length, 0)
                 )
                 .toLocaleString()
 
-                font.pointSize: 100
+                font.pointSize: base.font.pointSize * 2.5
                 minimumPointSize: 24
 
                 fontSizeMode: Text.VerticalFit
