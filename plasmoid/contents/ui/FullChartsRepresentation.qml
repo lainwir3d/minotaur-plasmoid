@@ -1,5 +1,5 @@
 import QtQuick 2.15
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.components 3.0 as PlasmaComponents
 import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 
@@ -37,7 +37,7 @@ Item {
             rightMargin: 5
         }
 
-        Row {
+        RowLayout {
             spacing: 3
 
             PlasmaComponents.Label {
@@ -188,15 +188,13 @@ Item {
             PlasmaComponents.Label {
                 id: value
 
-                width: paintedWidth
-
                 text: market_value.last
                 .toFixed(
                 Math.max(9 - market_value.last.toFixed(0).length, 0)
                 )
                 .toLocaleString()
 
-                font.pointSize: 100
+                font.pointSize: base.font.pointSize * 2.5
                 minimumPointSize: 24
 
                 fontSizeMode: Text.VerticalFit
