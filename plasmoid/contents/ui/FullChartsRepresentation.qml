@@ -253,9 +253,6 @@ Item {
                 id: priceSeries
                 axisX: xAxis
                 axisY: yAxis
-
-                pointsVisible: true
-                pointLabelsVisible: false
             }
 
             MouseArea {
