@@ -124,6 +124,10 @@ Item {
             opacity: 0.5
 
             animationOptions: ChartView.SeriesAnimations
+            animationEasingCurve.type: Easing.InOutSine // InOutCubic / InOutQuart / InOutQuad / InOutQuint
+
+
+            backgroundColor: PlasmaCore.Theme.viewBackgroundColor
 
             legend.visible: false
             antialiasing: true
@@ -134,8 +138,6 @@ Item {
                 bottom: 5
                 left: 5
             }
-
-            property date firstDate: new Date()
 
             Connections {
                 target: plasmoid.configuration
@@ -174,7 +176,6 @@ Item {
                 }
             }
 
-            backgroundColor: PlasmaCore.Theme.viewBackgroundColor
 
             DateTimeAxis {
                 id: xAxis
