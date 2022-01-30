@@ -294,6 +294,20 @@ Item {
                                 else if(mouseValue.x > lastValue.x) mouseValue = lastValue;
 
                                 currentPlotPoint = mouseValue;
+
+                                for(var i=priceSeries.count - 1; (i > 0); i--){
+                                    var v = priceSeries.at(i);
+                                    var vn1 = priceSeries.at(i-1);
+
+
+                                    if((mouseValue.x > vn1.x) && (mouseValue.x < v.x)){
+                                        var dt = v.x - vn1.x;
+                                        var dv = v.y - vn1.y;
+
+                                        currentPlotPoint.y = vn1.y + (currentPlotPoint.x - vn1.x) * dv / dt;
+                                        break;
+                                    }
+                                }
                             }
                         }
 
