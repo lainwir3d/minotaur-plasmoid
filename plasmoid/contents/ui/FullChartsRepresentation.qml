@@ -254,6 +254,72 @@ Item {
                 axisX: xAxis
                 axisY: yAxis
             }
+
+            MouseArea {
+                id: plotMouseArea
+
+                x: chartView.plotArea.x
+                y: chartView.plotArea.y
+                width: chartView.plotArea.width
+                height: chartView.plotArea.height
+
+                hoverEnabled: true
+
+                Rectangle {
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    x: parent.mouseX
+
+                    width: 2
+
+                    visible: plotMouseArea.containsMouse
+
+                    color: PlasmaCore.Theme.highlightColor
+
+                    PlasmaComponents.ToolTip {
+                        //x: 0
+                        y: parent.height + 3
+
+                        property point mousePos: Qt.point(plotMouseArea.mouseX, plotMouseArea.mouseY)
+
+                        onMousePosChanged: {
+                            if(priceSeries.count > 0){
+                                var firstValue = priceSeries.at(0);
+                                var lastValue = priceSeries.at(priceSeries.count - 1);
+
+                                var mouseValue = chartView.mapToValue(mousePos, priceSeries);
+
+                                if(mouseValue.x < firstValue.x) mouseValue = firstValue;
+                                else if(mouseValue.x > lastValue.x) mouseValue = lastValue;
+
+                                currentPlotPoint = mouseValue;
+                            }
+                        }
+
+
+                        property point currentPlotPoint: Qt.point(-1, -1)
+                        /*
+                        onCurrentPlotPointChanged: {
+                            print("pointChanged")
+                            print(currentPlotPoint);
+                        }
+                        */
+
+                        visible: parent.visible && (priceSeries.count > 0)
+                        delay: 0
+                        timeout: 0
+
+                        text: new Date(currentPlotPoint.x).toLocaleString(Qt.locale(), xAxis.format) + " -> " + currentPlotPoint.y.toFixed(
+                                  Math.max(9 - currentPlotPoint.y.toFixed(0).length, 0)
+                                  )
+                    }
+
+                }
+
+
+            }
+
+
         }
 
         Row {
