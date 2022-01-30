@@ -281,7 +281,7 @@ Item {
                         //x: 0
                         y: parent.height + 3
 
-                        property point mousePos: Qt.point(plotMouseArea.mouseX, plotMouseArea.mouseY)
+                        property point mousePos: plotMouseArea.mapToItem(chartView, Qt.point(plotMouseArea.mouseX, plotMouseArea.mouseY))
 
                         onMousePosChanged: {
                             if(priceSeries.count > 0){
@@ -297,14 +297,7 @@ Item {
                             }
                         }
 
-
                         property point currentPlotPoint: Qt.point(-1, -1)
-                        /*
-                        onCurrentPlotPointChanged: {
-                            print("pointChanged")
-                            print(currentPlotPoint);
-                        }
-                        */
 
                         visible: parent.visible && (priceSeries.count > 0)
                         delay: 0
