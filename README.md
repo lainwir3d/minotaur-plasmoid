@@ -3,6 +3,8 @@ A KDE Plasma 5 Plasmoid for monitoring and charting cryptocurrency exchange rate
 
 This is a fork of [Minotaur plasmoid from jkcdarunday/minotaur-plasmoid](https://github.com/jkcdarunday/minotaur-plasmoid) adding chart drawing support. You can have both if you use the standalone-release branch or if you take the release once it's available :-)
 
+**Requires Qt Charts**
+
 **Please note that plot data is not fetched online, it is just being kept while the plasmoid is running.**
 
 ## Installation

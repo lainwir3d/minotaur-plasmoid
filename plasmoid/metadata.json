@@ -12,7 +12,7 @@
         ],
         "Category": "Online Services",
         "Description": "A KDE Plasma 5 Plasmoid for monitoring and charting cryptocurrency exchange rates on various exchanges.\n\nThis is a fork of Jan Keith Darunday Minotaur plasmoid adding chart drawing.\n\n**Please note that plot data is not fetched online, it is just being kept while the plasmoid is running.**",
-	"Description[fr]": "Un Plasmoid pour KDE Plasma 5 permettant de monitorer et de tracer les taux d'échanges de diverses cryptomonnaies.\n\nIl s'agit d'un fork du plasmoid Minotaur de Jan Keith Darunday rajoutant uniquement le traçage d'une courbe de suivi.\n\n**Veuillez noter que les données de traçage des courbes n'est pas récupéré en ligne, il s'agit juste d'une historisation des données lorsque le plasmoid tourne.**",
+	"Description[fr]": "Un Plasmoid pour KDE Plasma 5 permettant de monitorer et de tracer les taux d'échanges de diverses cryptomonnaies.\n\nIl s'agit d'un fork du plasmoid Minotaur de Jan Keith Darunday rajoutant uniquement le traçage d'une courbe de suivi.\n\n**Requires Qt Charts**\n\n**Veuillez noter que les données de traçage des courbes n'est pas récupéré en ligne, il s'agit juste d'une historisation des données lorsque le plasmoid tourne.**",
         "Id": "net.lainwir3d.minotaur-charts",
         "Name": "Minotaur Charts",
 	"License": "MIT",
