@@ -20,7 +20,7 @@
     </entry>
     <entry name="interval" type="Int">
       <label>Interval</label>
-      <default>60</default>
+      <default>300</default>
     </entry>
   </group>
 </kcfg>
