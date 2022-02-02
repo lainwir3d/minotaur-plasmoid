@@ -19,7 +19,7 @@
         "ServiceTypes": [
             "Plasma/Applet"
         ],
-        "Version": "0.2.1",
+        "Version": "0.2.2",
         "Website": "https://github.com/lainwir3d/minotaur-plasmoid"
     },
     "X-Plasma-API": "declarativeappletscript",
