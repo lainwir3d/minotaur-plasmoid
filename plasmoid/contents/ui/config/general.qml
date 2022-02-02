@@ -77,7 +77,7 @@ Item {
         PlasmaComponents.Label {
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
-            text: "Interval"
+            text: "Interval (secs)"
         }
 
         PlasmaComponents.SpinBox {
@@ -85,12 +85,11 @@ Item {
 
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
+            editable: true
+
             from: 1
             to: 86400
             stepSize: 1
-            textFromValue: function(value) {
-                return `${value} s`;
-            }
         }
     }
 }
