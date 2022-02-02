@@ -1,7 +1,7 @@
-import QtQuick 2.0
+import QtQuick 2.1
 import QtQuick.Controls 2.5
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.components 3.0 as PlasmaComponents
 import QtQuick.Layouts 1.1
 
 Item {
@@ -13,40 +13,53 @@ Item {
     property alias cfg_target: target_field.text
     property alias cfg_interval: interval_field.value
 
-    Grid {
+    GridLayout {
         Layout.fillWidth: true
         columns: 2
 
-        Label {
+        PlasmaComponents.Label {
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+
             text: "Base Currency"
         }
 
-        TextField {
+        PlasmaComponents.TextField {
             id: base_field
+
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
             placeholderText: "USD"
 
             text: base_currency
         }
 
-        Label {
+        PlasmaComponents.Label {
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+
             text: "Target Currency"
         }
 
-        TextField {
+        PlasmaComponents.TextField {
             id: target_field
+
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
             placeholderText: "ETH"
 
             text: target_currency
         }
 
-        Label {
+        PlasmaComponents.Label {
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+
             text: "Exchange"
         }
 
-        ComboBox {
+        PlasmaComponents.ComboBox {
             id: current_exchange;
+
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
             function getCurrentExchangeId() {
                 return current_exchange.find(cfg_exchange);
@@ -61,12 +74,17 @@ Item {
             currentIndex: getCurrentExchangeId()
         }
 
-        Label {
+        PlasmaComponents.Label {
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+
             text: "Interval"
         }
 
-        SpinBox {
+        PlasmaComponents.SpinBox {
             id: interval_field
+
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+
             from: 1
             to: 86400
             stepSize: 1
