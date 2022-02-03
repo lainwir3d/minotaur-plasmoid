@@ -284,7 +284,7 @@ Item {
                         property point mousePos: plotMouseArea.mapToItem(chartView, Qt.point(plotMouseArea.mouseX, plotMouseArea.mouseY))
 
                         onMousePosChanged: {
-                            if(priceSeries.count > 0){
+                            if(priceSeries.count > 1){
                                 var firstValue = priceSeries.at(0);
                                 var lastValue = priceSeries.at(priceSeries.count - 1);
 
@@ -293,27 +293,68 @@ Item {
                                 if(mouseValue.x < firstValue.x) mouseValue = firstValue;
                                 else if(mouseValue.x > lastValue.x) mouseValue = lastValue;
 
-                                currentPlotPoint = mouseValue;
+                                //print("\nStarting range lookup");
 
-                                for(var i=priceSeries.count - 1; (i > 0); i--){
-                                    var v = priceSeries.at(i);
-                                    var vn1 = priceSeries.at(i-1);
+                                var iLow = 0;
+                                var iHigh = priceSeries.count - 1;
+                                var step = Math.trunc((iHigh - iLow + 1) / 2);
+                                var mod = (iHigh - iLow + 1) % 2;
+                                var iteration = 0;
+                                while(1){
+                                    if((iHigh - iLow) == 1) break;
+                                    iteration++;
 
+                                    var j0 = iLow;
+                                    var j1 = iLow + step;
+                                    var k0 = j1;
+                                    var k1 = Math.min(iHigh, k0 + step + mod);
 
-                                    if((mouseValue.x > vn1.x) && (mouseValue.x < v.x)){
-                                        var dt = v.x - vn1.x;
-                                        var dv = v.y - vn1.y;
+                                    var vj0 = priceSeries.at(j0);
+                                    var vj1 = priceSeries.at(j1);
+                                    var vk0 = priceSeries.at(k0);
+                                    var vk1 = priceSeries.at(k1);
 
-                                        currentPlotPoint.y = vn1.y + (currentPlotPoint.x - vn1.x) * dv / dt;
-                                        break;
+                                    //print("INTERVAL 0 => Looking between indices " + j0 + " (" + (new Date(vj0.x)) + ") and " + j1 + " (" + (new Date(vj1.x)) +"). iLow=" + iLow + " iHigh=" + iHigh + " Count=" + priceSeries.count + " Step=" + step +  " Mod=" + mod);
+                                    //print("INTERVAL 1 => Looking between indices " + k0 + " (" + (new Date(vk0.x)) + ") and " + k1 + " (" + (new Date(vk1.x)) +"). iLow=" + iLow + " iHigh=" + iHigh + " Count=" + priceSeries.count + " Step=" + step +  " Mod=" + mod);
+
+                                    if((mouseValue.x > vj0.x) && (mouseValue.x < vj1.x)){
+                                        iLow = j0;
+                                        iHigh = j1;
+                                        step = Math.trunc((iHigh - iLow + 1) / 2);
+                                        mod = (iHigh - iLow + 1) % 2;
+
+                                        //print("In range " + j0 + "->" + j1 + ", rewind.");
+                                        continue;
+                                    }else if((mouseValue.x > vk0.x) && (mouseValue.x < vk1.x)){
+                                        iLow = k0;
+                                        iHigh = k1;
+                                        step = Math.trunc((iHigh - iLow + 1) / 2);
+                                        mod = (iHigh - iLow + 1) % 2;
+
+                                        //print("In range " + k0 + "->" + k1 + ", rewind.");
+                                        continue;
                                     }
+
+                                    //print("INFINITE LOOP ERROR");
+                                    currentPlotPoint.x = -1;
+                                    return;
                                 }
+
+                                //print("Found interval: " + iLow + "->" + iHigh + " in " + iteration + " iterations.");
+                                var v0 = priceSeries.at(iLow);
+                                var v1 = priceSeries.at(iHigh);
+                                var dt = v1.x - v0.x;
+                                var dv = v1.y - v0.y;
+
+                                currentPlotPoint.x = mouseValue.x;
+                                currentPlotPoint.y = v0.y + (currentPlotPoint.x - v0.x) * dv / dt;
+                                return;
                             }
                         }
 
                         property point currentPlotPoint: Qt.point(-1, -1)
 
-                        visible: parent.visible && (priceSeries.count > 0)
+                        visible: parent.visible && (priceSeries.count > 1) && (currentPlotPoint.x != -1)
                         delay: 0
                         timeout: 0
 
