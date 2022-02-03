@@ -1,7 +1,6 @@
 import QtQuick 2.1
 import QtQuick.Controls 2.5
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents
 import QtQuick.Layouts 1.1
 
 Item {
@@ -18,13 +17,13 @@ Item {
         Layout.fillWidth: true
         columns: 2
 
-        PlasmaComponents.Label {
+        Label {
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
             text: "Base Currency"
         }
 
-        PlasmaComponents.TextField {
+        TextField {
             id: base_field
 
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
@@ -34,13 +33,13 @@ Item {
             text: base_currency
         }
 
-        PlasmaComponents.Label {
+        Label {
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
             text: "Target Currency"
         }
 
-        PlasmaComponents.TextField {
+        TextField {
             id: target_field
 
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
@@ -50,13 +49,13 @@ Item {
             text: target_currency
         }
 
-        PlasmaComponents.Label {
+        Label {
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
             text: "Exchange"
         }
 
-        PlasmaComponents.ComboBox {
+        ComboBox {
             id: current_exchange;
 
             Layout.fillWidth: true
@@ -75,13 +74,13 @@ Item {
             currentIndex: getCurrentExchangeId()
         }
 
-        PlasmaComponents.Label {
+        Label {
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
             text: "Interval (secs)"
         }
 
-        PlasmaComponents.SpinBox {
+        SpinBox {
             id: interval_field
 
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
@@ -93,13 +92,13 @@ Item {
             stepSize: 1
         }
 
-        PlasmaComponents.Label {
+        Label {
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
 
             text: "Chart animation"
         }
 
-        PlasmaComponents.CheckBox {
+        CheckBox {
             id: chartAnimation_field
 
             Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
