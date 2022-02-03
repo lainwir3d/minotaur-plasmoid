@@ -123,7 +123,7 @@ Item {
 
             opacity: 0.5
 
-            animationOptions: ChartView.SeriesAnimations
+            animationOptions: plasmoid.configuration.chartAnimation ? ChartView.SeriesAnimations : ChartView.NoAnimation
             animationEasingCurve.type: Easing.InOutSine // InOutCubic / InOutQuart / InOutQuad / InOutQuint
 
 

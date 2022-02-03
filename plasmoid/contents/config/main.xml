@@ -22,5 +22,9 @@
       <label>Interval</label>
       <default>300</default>
     </entry>
+    <entry name="chartAnimation" type="Bool">
+      <label>Chart animation</label>
+      <default>true</default>
+    </entry>
   </group>
 </kcfg>

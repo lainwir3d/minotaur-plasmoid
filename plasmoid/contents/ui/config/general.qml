@@ -12,6 +12,7 @@ Item {
     property alias cfg_base: base_field.text
     property alias cfg_target: target_field.text
     property alias cfg_interval: interval_field.value
+    property alias cfg_chartAnimation: chartAnimation_field.checked
 
     GridLayout {
         Layout.fillWidth: true
@@ -90,6 +91,21 @@ Item {
             from: 1
             to: 86400
             stepSize: 1
+        }
+
+        PlasmaComponents.Label {
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+
+            text: "Chart animation"
+        }
+
+        PlasmaComponents.CheckBox {
+            id: chartAnimation_field
+
+            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+
+            tristate: false
+
         }
     }
 }
