@@ -1,10 +1,12 @@
 import QtQuick 2.1
 import QtQuick.Controls 2.5
-import org.kde.plasma.core 2.0 as PlasmaCore
 import QtQuick.Layouts 1.1
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.kirigami 2.4 as Kirigami
 
 Item {
-    Layout.fillWidth: true
+    width: childrenRect.width
+    height: childrenRect.height
 
     property string cfg_exchange
 
@@ -13,53 +15,30 @@ Item {
     property alias cfg_interval: interval_field.value
     property alias cfg_chartAnimation: chartAnimation_field.checked
 
-    GridLayout {
-        Layout.fillWidth: true
-        columns: 2
-
-        Label {
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
-
-            text: "Base Currency"
-        }
+    Kirigami.FormLayout {
+        anchors.left: parent.left
+        anchors.right: parent.right
 
         TextField {
             id: base_field
 
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
-
+            Kirigami.FormData.label: i18n("Base currency")
             placeholderText: "USD"
-
             text: base_currency
-        }
-
-        Label {
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
-
-            text: "Target Currency"
         }
 
         TextField {
             id: target_field
 
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
-
+            Kirigami.FormData.label: i18n("Target currency")
             placeholderText: "ETH"
-
             text: target_currency
-        }
-
-        Label {
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
-
-            text: "Exchange"
         }
 
         ComboBox {
             id: current_exchange;
 
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+            Kirigami.FormData.label: i18n("Exchange")
 
             function getCurrentExchangeId() {
                 return current_exchange.find(cfg_exchange);
@@ -74,16 +53,10 @@ Item {
             currentIndex: getCurrentExchangeId()
         }
 
-        Label {
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
-
-            text: "Interval (secs)"
-        }
-
         SpinBox {
             id: interval_field
 
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
+            Kirigami.FormData.label: i18n("Interval (secs)")
 
             editable: true
 
@@ -92,19 +65,11 @@ Item {
             stepSize: 1
         }
 
-        Label {
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
-
-            text: "Chart animation"
-        }
-
         CheckBox {
             id: chartAnimation_field
 
-            Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
-
+            Kirigami.FormData.label: i18n("Chart animation")
             tristate: false
-
         }
     }
 }
