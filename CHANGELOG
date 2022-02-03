@@ -1,0 +1,9 @@
+v0.2.2:
+  - Add configuration parameter to enable / disable chart animation.
+  - Greatly improve mouse hovering performance.
+  - Fix keyboard entry of interval configuration parameter.
+  - Change default fetch interval to 5 minutes.
+  - Misc UI change in configuration page.
+
+v0.2.1:
+  - Add chart drawing.
